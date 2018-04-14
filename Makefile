@@ -1,18 +1,16 @@
-NASK = ../z_tools/nask.exe
-
 default:
 	make img
 
 #files
 
-ipl.bin: ipl.nasm Makefile
-	nasm ipl.nasm -o ipl.bin -l ipl.lst
+ipl.bin: ipl.asm Makefile
+	nasm ipl.asm -o ipl.bin -l ipl.lst
 
-asmhead.bin: asmhead.nasm Makefile
-	nasm asmhead.nasm -o asmhead.bin -l asmhead.lst
+asmhead.bin: asmhead.asm Makefile
+	nasm asmhead.asm -o asmhead.bin -l asmhead.lst
 
-nasmfunc.o: nasmfunc.nasm Makefile
-	nasm -g -f elf nasmfunc.nasm -o nasmfunc.o
+nasmfunc.o: nasmfunc.asm Makefile
+	nasm -g -f elf nasmfunc.asm -o nasmfunc.o
 
 haribote.sys: asmhead.bin bootpack.hrb Makefile
 	cat asmhead.bin bootpack.hrb > haribote.sys
