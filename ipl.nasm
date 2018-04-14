@@ -3,7 +3,7 @@
     CYLS EQU 10
     ORG 0x7c00
 
-    JMP entry
+    JMP SHORT entry
     DB 0x90
     DB "HARIBOTE"
     DW 512
@@ -22,7 +22,7 @@
     DD 0xffffffff
     DB "HARIBOTEOS "
     DB "FAT12    "
-    RESB 18
+    TIMES 18 DB 0
 entry:
     MOV AX,0
     MOV SS,AX
@@ -89,6 +89,6 @@ msg:
     DB 0x0a
     DB 0
 
-    RESB 0x7dfe-$
+   TIMES 0x1fe-($-$$) DB 0
 
     DB 0x55,0xaa
