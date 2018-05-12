@@ -16,7 +16,7 @@ haribote.sys: asmhead.bin bootpack.hrb Makefile
 	cat asmhead.bin bootpack.hrb > haribote.sys
 
 bootpack.hrb: bootpack.c nasmfunc.o Makefile
-	gcc -march=i486 -m32 -nostdlib -fno-pie -T hrb.ld -g bootpack.c nasmfunc.o -o bootpack.hrb
+	gcc -march=i486 -m32 -nostdlib -fno-pie -fno-stack-protector -T hrb.ld -g bootpack.c nasmfunc.o -o bootpack.hrb
 
 HariboteOS.img: ipl.bin haribote.sys Makefile
 	mformat -f 1440 -B ipl.bin -C -i HariboteOS.img ::

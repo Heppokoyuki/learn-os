@@ -1,4 +1,6 @@
 #include "hankaku.c"
+#include "sprintf.c"
+#include <stdarg.h>
 
 /*** from assembly ***/
 void _io_hlt(void);
@@ -39,14 +41,18 @@ struct BOOTINFO {
 };
 
 extern char hankaku[4096];
+extern void sprintf(char *str, char *fmt, ...);
 
 void HariMain(void)
 {
     struct BOOTINFO *binfo = (struct BOOTINFO *) 0x0ff0;
+    char *s;
 
     init_palette();
     init_screen(binfo->vram, binfo->scrnx, binfo->scrny);
     putfonts8_asc(binfo->vram, binfo->scrnx, 8, 8, COL8_FFFFFF, "SecHack365");
+    sprintf(s, "scrnx = %d", binfo->scrnx);
+    putfonts8_asc(binfo->vram, binfo->scrnx, 16, 64, COL8_FFFFFF, s);
 
     for(;;) {
         _io_hlt();
