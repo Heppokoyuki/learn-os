@@ -1,3 +1,6 @@
+#ifndef _SPRINTF_C_
+#define _SPRINTF_C_
+
 #include <stdarg.h>
 
 int decimalAsciiConvert(char *str, int dec) {
@@ -59,3 +62,5 @@ void sprintf(char *str, char *fmt, ...)
     *str = 0x00;
     va_end(list);
 }
+
+#endif /* _SPRINTF_C_ */
