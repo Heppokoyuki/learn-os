@@ -5,7 +5,7 @@ extern void sprintf(char *str, char *fmt, ...);
 
 void HariMain(void)
 {
-    struct BOOTINFO *binfo = (struct BOOTINFO *) 0x0ff0;
+    struct BOOTINFO *binfo = (struct BOOTINFO *) ADR_BOOTINFO;
     char *mcursor;
     int mx, my;
 
