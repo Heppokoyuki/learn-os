@@ -12,6 +12,9 @@ void HariMain(void)
     mx = (binfo->scrnx - 16) / 2;
     my = (binfo->scrny - 28 - 16) / 2;
 
+    init_gdtidt();
+    init_pic();
+
     init_palette();
     init_screen(binfo->vram, binfo->scrnx, binfo->scrny);
     putfonts8_asc(binfo->vram, binfo->scrnx, 8, 8, COL8_FFFFFF, "LAN GA SASA LAN");
