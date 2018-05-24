@@ -27,6 +27,7 @@
 #define LIMIT_BOTPAK 0x0007ffff
 #define AR_DATA32_RW 0x4092
 #define AR_CODE32_ER 0x409a
+#define AR_INTGATE32 0x008e
 
 #define PIC0_ICW1 0x0020
 #define PIC0_OCW2 0x0020
@@ -40,6 +41,12 @@
 #define PIC1_ICW2 0x00a1
 #define PIC1_ICW3 0x00a1
 #define PIC1_ICW4 0x00a1
+
+#include "sprintf.c"
+
+extern int decimalAsciiConvert(char *str, int dec);
+extern int hexAsciiConvert(char *str, int dec);
+extern void sprintf(char *str, char *fmt, ...);
 
 struct BOOTINFO {
     char cyls, leds, vmode, reserve;
@@ -60,11 +67,16 @@ struct GATE_DESCRIPTOR {
 /*** nasmfunc.asm ***/
 void _io_hlt(void);
 void _io_cli(void);
+void _io_sti(void);
+int _io_in8(int port);
 void _io_out8(int port, int data);
 int _io_load_eflags(void);
 void _io_store_eflags(int eflags);
 void _load_idtr(int limit, int addr);
 void _load_gdtr(int limit, int addr);
+void _asm_inthandler21(void);
+void _asm_inthandler27(void);
+void _asm_inthandler2c(void);
 
 /*** graphic.c ***/
 void init_palette(void);
@@ -83,5 +95,7 @@ void set_gatedesc(struct GATE_DESCRIPTOR *gd, int offset, int selector, int ar);
 
 /*** int.c ***/
 void init_pic(void);
+void inthandler21(int *esp);
+void inthandler2c(int *esp);
 
 #endif /* _HARIBOTE_H_ */
