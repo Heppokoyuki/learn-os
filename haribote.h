@@ -42,11 +42,7 @@
 #define PIC1_ICW3 0x00a1
 #define PIC1_ICW4 0x00a1
 
-#include "sprintf.c"
-
-extern int decimalAsciiConvert(char *str, int dec);
-extern int hexAsciiConvert(char *str, int dec);
-extern void sprintf(char *str, char *fmt, ...);
+#include <stdarg.h>
 
 struct BOOTINFO {
     char cyls, leds, vmode, reserve;
@@ -97,5 +93,10 @@ void set_gatedesc(struct GATE_DESCRIPTOR *gd, int offset, int selector, int ar);
 void init_pic(void);
 void inthandler21(int *esp);
 void inthandler2c(int *esp);
+
+/*** sprintf.c ***/
+int decimalAsciiConvert(char *str, int dec);
+int hexAsciiConvert(char *str, int dec);
+void sprintf(char *str, char *fmt, ...);
 
 #endif /* _HARIBOTE_H_ */

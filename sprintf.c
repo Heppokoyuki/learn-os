@@ -1,4 +1,4 @@
-#include <stdarg.h>
+#include "haribote.h"
 
 int decimalAsciiConvert(char *str, int dec) {
     int len = 0, len_buf;
