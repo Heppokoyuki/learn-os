@@ -93,6 +93,7 @@ void set_gatedesc(struct GATE_DESCRIPTOR *gd, int offset, int selector, int ar);
 void init_pic(void);
 void inthandler21(int *esp);
 void inthandler2c(int *esp);
+void inthandler27(int *esp);
 
 /*** sprintf.c ***/
 int decimalAsciiConvert(char *str, int dec);
