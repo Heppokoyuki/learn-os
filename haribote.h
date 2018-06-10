@@ -59,11 +59,16 @@ struct GATE_DESCRIPTOR {
     char dw_count, access_right;
     short offset_high;
 };
+struct KEYBUF {
+    unsigned char data[32];
+    int next_r, next_w, len;
+};
 
 /*** nasmfunc.asm ***/
 void _io_hlt(void);
 void _io_cli(void);
 void _io_sti(void);
+void _io_stihlt(void);
 int _io_in8(int port);
 void _io_out8(int port, int data);
 int _io_load_eflags(void);
