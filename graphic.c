@@ -1,7 +1,5 @@
 #include "haribote.h"
 
-char hankaku[4096];
-
 void init_palette(void)
 {
     static unsigned char table_rgb[16 * 3] = {
@@ -52,7 +50,7 @@ void boxfill8(unsigned char *vram, int xsize, unsigned char c, int x0, int y0, i
     return;
 }
 
-void init_screen(char *vram, int x, int y)
+void init_screen8(char *vram, int x, int y)
 {
 	boxfill8(vram, x, COL8_008484,  0,     0,      x -  1, y - 29);
 	boxfill8(vram, x, COL8_C6C6C6,  0,     y - 28, x -  1, y - 28);
@@ -94,6 +92,7 @@ void putfont8(char *vram, int xsize, int x, int y, char c, char *font)
 
 void putfonts8_asc(char *vram, int xsize, int x, int y, char c, unsigned char *s)
 {
+    extern char hankaku[4096];
     for(; *s != 0x00; s++) {
         putfont8(vram, xsize, x, y, c, hankaku + *s * 16);
         x += 8;

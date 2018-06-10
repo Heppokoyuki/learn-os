@@ -19,7 +19,7 @@ int hexAsciiConvert(char *str, int dec) {
     int len = 0, len_buf;
     int buf[10];
     while(1) {
-        buf[len++] = len % 16;
+        buf[len++] = dec % 16;
         if(dec < 16) break;
         dec /= 16;
     }
@@ -29,7 +29,7 @@ int hexAsciiConvert(char *str, int dec) {
         *(str++) = (buf[len] < 10) ? (buf[len] + 0x30) : (buf[len] - 9 + 0x60);
     }
     return len_buf;
-}
+} 
 
 void sprintf(char *str, char *fmt, ...)
 {

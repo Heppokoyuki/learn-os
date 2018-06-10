@@ -19,6 +19,8 @@ void init_pic(void)
 
     _io_out8(PIC0_IMR, 0xfb);
     _io_out8(PIC1_IMR, 0xff);
+
+    return;
 }
 
 void inthandler21(int *esp)
