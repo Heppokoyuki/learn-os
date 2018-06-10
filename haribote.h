@@ -63,6 +63,10 @@ struct KEYBUF {
     unsigned char data[32];
     int next_r, next_w, len;
 };
+struct FIFO8 {
+    unsigned char *buf;
+    int p, q, size, free, flags;
+};
 
 /*** nasmfunc.asm ***/
 void _io_hlt(void);
@@ -99,6 +103,12 @@ void init_pic(void);
 void inthandler21(int *esp);
 void inthandler2c(int *esp);
 void inthandler27(int *esp);
+
+/*** fifo.c ***/
+void fifo8_init(struct FIFO8 *fifo, int size, unsigned char *buf);
+int fifo8_put(struct FIFO8 *fifo, unsigned char data);
+int fifo8_get(struct FIFO8 *fifo);
+int fifo8_status(struct FIFO8 *fifo);
 
 /*** sprintf.c ***/
 int decimalAsciiConvert(char *str, int dec);

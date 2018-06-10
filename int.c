@@ -2,7 +2,8 @@
 
 #define PORT_KEYDAT 0x0060
 
-struct KEYBUF keybuf;
+struct FIFO8 keyfifo;
+struct FIFO8 mousefifo;
 
 void init_pic(void)
 {
@@ -30,25 +31,18 @@ void inthandler21(int *esp)
     unsigned char data;
     _io_out8(PIC0_OCW2, 0x61);
     data = _io_in8(PORT_KEYDAT);
-    if(keybuf.len < 32) {
-        keybuf.data[keybuf.next_w] = data;
-        keybuf.len++;
-        keybuf.next_w++;
-        if(keybuf.next_w == 32) {
-            keybuf.next_w = 0;
-        }
-    }
+    fifo8_put(&keyfifo, data);
     return;
 }
 
 void inthandler2c(int *esp)
 {
-    struct BOOTINFO *binfo = (struct BOOTINFO *) ADR_BOOTINFO;
-    boxfill8(binfo->vram, binfo->scrnx, COL8_000000, 0, 0, 32 * 8 - 1, 15);
-    putfonts8_asc(binfo->vram, binfo->scrnx, 0, 0, COL8_FFFFFF, "INT 2C (IRQ-12) : PS/2 mouse");
-    for(;;) {
-        _io_hlt();
-    }
+    unsigned char data;
+    _io_out8(PIC1_OCW2, 0x64);
+    _io_out8(PIC0_OCW2, 0x62);
+    data = _io_in8(PORT_KEYDAT);
+    fifo8_put(&mousefifo, data);
+    return;
 }
 
 void inthandler27(int *esp)
