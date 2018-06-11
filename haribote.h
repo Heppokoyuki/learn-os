@@ -97,6 +97,8 @@ void _load_gdtr(int limit, int addr);
 void _asm_inthandler21(void);
 void _asm_inthandler27(void);
 void _asm_inthandler2c(void);
+int _load_cr0(void);
+void _store_cr0(int cr0);
 
 /*** graphic.c ***/
 void init_palette(void);

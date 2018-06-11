@@ -32,7 +32,7 @@ img:
 
 run:
 	make img
-	qemu-system-i386 -fda HariboteOS.img
+	qemu-system-i386 -m 32M -fda HariboteOS.img
 
 clean:
 	rm ipl.bin ipl.lst asmhead.bin asmhead.lst haribote.sys bootpack.hrb *.o
