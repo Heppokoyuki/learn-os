@@ -16,6 +16,7 @@ struct SHTCTL *shtctl_init(struct MEMMAN *memman, unsigned char *vram, int xsize
     ctl->top = -1;
     for(i = 0; i < MAX_SHEETS; i++) {
         ctl->sheets0[i].flags = 0;
+        ctl->sheets0[i].ctl = ctl;
     }
 err:
     return ctl;
@@ -45,8 +46,9 @@ void sheet_setbuf(struct SHEET *sht, unsigned char *buf, int xsize, int ysize, i
     return;
 }
 
-void sheet_updown(struct SHTCTL *ctl, struct SHEET *sht, int height)
+void sheet_updown(struct SHEET *sht, int height)
 {
+    struct SHTCTL *ctl = sht->ctl;
     int h, old = sht->height;
 
     if(height > ctl->top + 1) {
@@ -94,30 +96,30 @@ void sheet_updown(struct SHTCTL *ctl, struct SHEET *sht, int height)
     return;
 }
 
-void sheet_refresh(struct SHTCTL *ctl, struct SHEET *sht, int bx0, int by0, int bx1, int by1)
+void sheet_refresh(struct SHEET *sht, int bx0, int by0, int bx1, int by1)
 {
     if(sht->height >= 0) {
-        sheet_refreshsub(ctl, sht->vx0 + bx0, sht->vy0 + by0, sht->vx0 + bx1, sht->vy0 + by1);
+        sheet_refreshsub(sht->ctl, sht->vx0 + bx0, sht->vy0 + by0, sht->vx0 + bx1, sht->vy0 + by1);
     }
     return;
 }
 
-void sheet_slide(struct SHTCTL *ctl, struct SHEET *sht, int vx0, int vy0)
+void sheet_slide(struct SHEET *sht, int vx0, int vy0)
 {
     int old_vx0 = sht->vx0, old_vy0 = sht->vy0;
     sht->vx0 = vx0;
     sht->vy0 = vy0;
     if(sht->height >= 0) {
-        sheet_refreshsub(ctl, old_vx0, old_vy0, old_vx0 + sht->bxsize, old_vy0 + sht->bysize);
-        sheet_refreshsub(ctl, vx0, vy0, vx0 + sht->bxsize, vy0 + sht->bysize);
+        sheet_refreshsub(sht->ctl, old_vx0, old_vy0, old_vx0 + sht->bxsize, old_vy0 + sht->bysize);
+        sheet_refreshsub(sht->ctl, vx0, vy0, vx0 + sht->bxsize, vy0 + sht->bysize);
     }
     return;
 }
 
-void sheet_free(struct SHTCTL *ctl, struct SHEET *sht)
+void sheet_free(struct SHEET *sht)
 {
     if(sht->height >= 0) {
-        sheet_updown(ctl, sht, -1);
+        sheet_updown(sht, -1);
     }
     sht->flags = 0;
     return;
@@ -128,6 +130,10 @@ void sheet_refreshsub(struct SHTCTL *ctl, int vx0, int vy0, int vx1, int vy1)
     int h, bx, by, vx, vy, bx0, by0, bx1, by1;
     unsigned char *buf, c, *vram = ctl->vram;
     struct SHEET *sht;
+    if(vx0 < 0) vx0 = 0;
+    if(vy0 < 0) vy0 = 0;
+    if(vx1 > ctl->xsize) vx1 = ctl->xsize;
+    if(vy1 > ctl->ysize) vy1 = ctl->ysize;
     for(h = 0; h <= ctl->top; h++) {
         sht = ctl->sheets[h];
         buf = sht->buf;
