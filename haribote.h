@@ -61,6 +61,13 @@
 #define MAX_SHEETS 256
 #define SHEET_USE 1
 
+#define PIT_CTRL 0x0043
+#define PIT_CNT0 0x0040
+
+#define MAX_TIMER 500
+#define TIMER_FLAGS_ALLOC 1
+#define TIMER_FLAGS_USING 2
+
 #include <stdarg.h>
 
 struct BOOTINFO {
@@ -108,6 +115,16 @@ struct SHTCTL {
     struct SHEET *sheets[MAX_SHEETS];
     struct SHEET sheets0[MAX_SHEETS];
 };
+struct TIMER {
+    unsigned int timeout, flags;
+    struct FIFO8 *fifo;
+    unsigned char data;
+};
+struct TIMERCTL {
+    unsigned int count, next, using;
+    struct TIMER *timers[MAX_TIMER];
+    struct TIMER timers0[MAX_TIMER];
+};
 
 /*** nasmfunc.asm ***/
 void _io_hlt(void);
@@ -120,6 +137,7 @@ int _io_load_eflags(void);
 void _io_store_eflags(int eflags);
 void _load_idtr(int limit, int addr);
 void _load_gdtr(int limit, int addr);
+void _asm_inthandler20(void);
 void _asm_inthandler21(void);
 void _asm_inthandler27(void);
 void _asm_inthandler2c(void);
@@ -181,6 +199,14 @@ void sheet_slide(struct SHEET *sht, int vx0, int vy0);
 void sheet_free(struct SHEET *sht);
 void sheet_refreshsub(struct SHTCTL *ctl, int vx0, int vy0, int vx1, int vy1, int h0, int h1);
 void sheet_refreshmap(struct SHTCTL *ctl, int vx0, int vy0, int vx1, int vy1, int h0);
+
+/*** timer.c ***/
+void init_pit(void);
+struct TIMER *timer_alloc(void);
+void timer_free(struct TIMER *timer);
+void timer_init(struct TIMER *timer, struct FIFO8 *fifo, unsigned char data);
+void timer_settime(struct TIMER *timer, unsigned int timeout);
+void inthandler20(int *esp);
 
 /*** sprintf.c ***/
 int decimalAsciiConvert(char *str, int dec);

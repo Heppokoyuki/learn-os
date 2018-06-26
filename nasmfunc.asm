@@ -5,8 +5,8 @@ section .text
     GLOBAL _io_load_eflags, _io_store_eflags
     GLOBAL _load_gdtr, _load_idtr
     GLOBAL _load_cr0, _store_cr0
-    GLOBAL _asm_inthandler21, _asm_inthandler27, _asm_inthandler2c
-    EXTERN inthandler21, inthandler27, inthandler2c
+    GLOBAL _asm_inthandler20, _asm_inthandler21, _asm_inthandler27, _asm_inthandler2c
+    EXTERN inthandler20, inthandler21, inthandler27, inthandler2c
 
 _io_hlt:
     HLT
@@ -91,6 +91,22 @@ _store_cr0:
     MOV EAX,[ESP+4]
     MOV CR0,EAX
     RET
+
+_asm_inthandler20:
+    PUSH ES
+    PUSH DS
+    PUSHAD
+    MOV EAX,ESP
+    PUSH EAX
+    MOV AX,SS
+    MOV DS,AX
+    MOV ES,AX
+    CALL inthandler20
+    POP EAX
+    POPAD
+    POP DS
+    POP ES
+    IRETD
 
 _asm_inthandler21:
     PUSH ES

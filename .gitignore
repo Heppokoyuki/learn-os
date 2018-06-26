@@ -3,3 +3,5 @@
 *.sys
 *.hrb
 *.o
+outgoing/*
+HariboteOS.img
