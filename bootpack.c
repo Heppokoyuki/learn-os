@@ -91,9 +91,7 @@ void HariMain(void)
                 i = fifo8_get(&keyfifo);
                 _io_sti();
                 sprintf(s, "%x", i);
-                boxfill8(buf_back, binfo->scrnx, COL8_008484, 0, 16, 15, 31);
-                putfonts8_asc(buf_back, binfo->scrnx, 0, 16, COL8_FFFFFF, s);
-                sheet_refresh(sht_back, 0, 16, 16, 32);
+                putfont8_asc_sht(sht_back, 0, 16, COL8_FFFFFF, COL8_008484, s, 2);
             }
             else if(fifo8_status(&mousefifo) != 0) {
                 i = fifo8_get(&mousefifo);
@@ -109,9 +107,7 @@ void HariMain(void)
                     if((mdec.btn & 0x04) != 0) {
                         s[2] = 'C';
                     }
-                    boxfill8(buf_back, binfo->scrnx, COL8_008484, 32, 16, 32 + 15 * 8 - 1, 31);
-                    putfonts8_asc(buf_back, binfo->scrnx, 32, 16, COL8_FFFFFF, s);
-                    sheet_refresh(sht_back, 32, 16, 32 + 15 * 8, 32);
+                    putfont8_asc_sht(sht_back, 32, 16, COL8_FFFFFF, COL8_008484, s, 15);
                     mx += mdec.x;
                     my += mdec.y;
                     if(mx < 0) mx = 0;
@@ -119,9 +115,7 @@ void HariMain(void)
                     if(mx > binfo->scrnx - 1) mx = binfo->scrnx - 1;
                     if(my > binfo->scrny - 1) my = binfo->scrny - 1;
                     sprintf(s, "(%d %d)", mx, my);
-                    boxfill8(buf_back, binfo->scrnx, COL8_008484, 0, 0, 79, 15);
-                    putfonts8_asc(buf_back, binfo->scrnx, 0, 0, COL8_FFFFFF, s);
-                    sheet_refresh(sht_back, 0, 0, 80, 16);
+                    putfont8_asc_sht(sht_back, 0, 0, COL8_FFFFFF, COL8_008484, s, 10);
                     sheet_slide(sht_mouse, mx, my);
                 }
             }

@@ -153,6 +153,7 @@ void putfont8(char *vram, int xsize, int x, int y, char c, char *font);
 void putfonts8_asc(char *vram, int xsize, int x, int y, char c, unsigned char *s);
 void init_mouse_cursor8(char *mouse, char bc);
 void putblock8_8(char *vram, int vxsize, int pxsize, int pysize, int px0, int py0, char *buf, int bxsize);
+void putfont8_asc_sht(struct SHEET *sht, int x, int y, int c, int b, char *s, int l);
 
 /*** dsctbl.c ***/
 void init_gdtidt(void);
