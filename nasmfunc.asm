@@ -5,6 +5,7 @@ section .text
     GLOBAL _io_load_eflags, _io_store_eflags
     GLOBAL _load_gdtr, _load_idtr
     GLOBAL _load_cr0, _store_cr0
+    GLOBAL _load_tr, _taskswitch4
     GLOBAL _asm_inthandler20, _asm_inthandler21, _asm_inthandler27, _asm_inthandler2c
     EXTERN inthandler20, inthandler21, inthandler27, inthandler2c
 
@@ -90,6 +91,14 @@ _load_cr0:
 _store_cr0:
     MOV EAX,[ESP+4]
     MOV CR0,EAX
+    RET
+
+_load_tr:
+    LTR [ESP+4]
+    RET
+
+_taskswitch4:
+    JMP 4*8:0
     RET
 
 _asm_inthandler20:

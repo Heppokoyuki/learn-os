@@ -27,6 +27,7 @@
 #define LIMIT_BOTPAK 0x0007ffff
 #define AR_DATA32_RW 0x4092
 #define AR_CODE32_ER 0x409a
+#define AR_TSS32 0x0089
 #define AR_INTGATE32 0x008e
 
 #define PIC0_ICW1 0x0020
@@ -130,6 +131,12 @@ struct TIMERCTL {
     struct TIMER *t0;
     struct TIMER timers0[MAX_TIMER];
 };
+struct TSS32 {
+    int backlink, esp0, ss0, esp1, ss1, esp2, ss2, cr3;
+    int eip, eflags, eax, ecx, edx, ebx, esp, ebp, esi, edi;
+    int es, cs, ss, ds, fs, gs;
+    int ldtr, iomap;
+};
 
 /*** nasmfunc.asm ***/
 void _io_hlt(void);
@@ -147,6 +154,8 @@ void _asm_inthandler21(void);
 void _asm_inthandler27(void);
 void _asm_inthandler2c(void);
 int _load_cr0(void);
+void _load_tr(int tr);
+void _taskswitch4(void);
 void _store_cr0(int cr0);
 
 /*** graphic.c ***/
