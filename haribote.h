@@ -69,6 +69,9 @@
 #define TIMER_FLAGS_ALLOC 1
 #define TIMER_FLAGS_USING 2
 
+#define MAX_TASKS 1000
+#define TASK_GDT0 3
+
 #include <stdarg.h>
 
 struct BOOTINFO {
@@ -97,6 +100,7 @@ struct FIFO8 {
 struct FIFO32 {
     int *buf;
     int p, q, size, free, flags;
+    struct TASK *task;
 };
 struct MOUSE_DEC {
     unsigned char buf[3], phase;
@@ -137,6 +141,16 @@ struct TSS32 {
     int es, cs, ss, ds, fs, gs;
     int ldtr, iomap;
 };
+struct TASK {
+    int sel, flags;
+    struct TSS32 tss;
+};
+struct TASKCTL {
+    int running;
+    int now;
+    struct TASK *tasks[MAX_TASKS];
+    struct TASK tasks0[MAX_TASKS];
+};
 
 /*** nasmfunc.asm ***/
 void _io_hlt(void);
@@ -155,6 +169,8 @@ void _asm_inthandler27(void);
 void _asm_inthandler2c(void);
 int _load_cr0(void);
 void _load_tr(int tr);
+void _farjmp(int eip, int cs);
+void _taskswitch3(void);
 void _taskswitch4(void);
 void _store_cr0(int cr0);
 
@@ -183,7 +199,7 @@ void fifo8_init(struct FIFO8 *fifo, int size, unsigned char *buf);
 int fifo8_put(struct FIFO8 *fifo, unsigned char data);
 int fifo8_get(struct FIFO8 *fifo);
 int fifo8_status(struct FIFO8 *fifo);
-void fifo32_init(struct FIFO32 *fifo, int size, int *buf);
+void fifo32_init(struct FIFO32 *fifo, int size, int *buf, struct TASK *task);
 int fifo32_put(struct FIFO32 *fifo, int data);
 int fifo32_get(struct FIFO32 *fifo);
 int fifo32_status(struct FIFO32 *fifo);
@@ -223,9 +239,16 @@ void sheet_refreshmap(struct SHTCTL *ctl, int vx0, int vy0, int vx1, int vy1, in
 void init_pit(void);
 struct TIMER *timer_alloc(void);
 void timer_free(struct TIMER *timer);
-void timer_init(struct TIMER *timer, struct FIFO8 *fifo, int data);
+void timer_init(struct TIMER *timer, struct FIFO32 *fifo, int data);
 void timer_settime(struct TIMER *timer, unsigned int timeout);
 void inthandler20(int *esp);
+
+/*** mtask.c ***/
+struct TASK *task_init(struct MEMMAN *memman);
+struct TASK *task_alloc(void);
+void task_run(struct TASK *task);
+void task_switch(void);
+void task_sleep(struct TASK *task);
 
 /*** sprintf.c ***/
 int decimalAsciiConvert(char *str, int dec);

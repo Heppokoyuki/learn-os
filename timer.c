@@ -1,6 +1,7 @@
 #include "haribote.h"
 
 struct TIMERCTL timerctl;
+extern struct TIMER *task_timer;
 
 void init_pit(void)
 {
@@ -39,7 +40,7 @@ void timer_free(struct TIMER *timer)
     return;
 }
 
-void timer_init(struct TIMER *timer, struct FIFO8 *fifo, int data)
+void timer_init(struct TIMER *timer, struct FIFO32 *fifo, int data)
 {
     timer->fifo = fifo;
     timer->data = data;
@@ -78,6 +79,7 @@ void timer_settime(struct TIMER *timer, unsigned int timeout)
 void inthandler20(int *esp)
 {
     struct TIMER *timer;
+    char ts = 0;
     _io_out8(PIC0_OCW2, 0x60);
     timerctl.count++;
     if(timerctl.next > timerctl.count) {
@@ -87,10 +89,12 @@ void inthandler20(int *esp)
     for(;;) {
         if(timer->timeout > timerctl.count) break;
         timer->flags = TIMER_FLAGS_ALLOC;
-        fifo32_put(timer->fifo, timer->data);
+        if(timer != task_timer) fifo32_put(timer->fifo, timer->data);
+        else ts = 1;
         timer = timer->next;
     }
     timerctl.t0 = timer;  
-    timerctl.next = timerctl.t0->timeout;
+    timerctl.next = timer->timeout;
+    if(ts != 0) task_switch();
     return;
 }
