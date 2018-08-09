@@ -72,6 +72,8 @@
 #define MAX_TASKS 1000
 #define TASK_GDT0 3
 
+extern struct TIMER *task_timer;
+
 #include <stdarg.h>
 
 struct BOOTINFO {

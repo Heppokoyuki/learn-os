@@ -1,7 +1,6 @@
 #include "haribote.h"
 
 struct TIMERCTL timerctl;
-extern struct TIMER *task_timer;
 
 void init_pit(void)
 {
