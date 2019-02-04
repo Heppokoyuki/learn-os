@@ -23,7 +23,7 @@ HariboteOS.img: ipl.bin haribote.sys Makefile
 	mcopy haribote.sys -i HariboteOS.img ::
 
 %.o: %.c
-	gcc -c -m32 -fno-pie -nostdlib -fno-stack-protector -o $*.o $*.c
+	gcc -c -m32 -fno-pie -nostdlib -fno-stack-protector -v -Q -o $*.o $*.c
 
 # command
 

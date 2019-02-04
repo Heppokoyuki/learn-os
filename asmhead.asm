@@ -23,7 +23,7 @@ VRAM EQU 0x0ff8
     JNE scrn320
 
     MOV AX,[ES:DI+4]
-    MOV AX,0x0200
+    CMP AX,0x0200
     JB scrn320
 
     MOV CX,VBEMODE
@@ -55,6 +55,7 @@ VRAM EQU 0x0ff8
 scrn320:
     MOV AL,0x13
     MOV AH,0x00
+    INT 0x10
     MOV BYTE [VMODE],8
     MOV WORD [SCRNX],320
     MOV WORD [SCRNY],200
@@ -72,6 +73,12 @@ keystatus:
 
     CLI
 
+    CALL waitkbdout
+    MOV AL,0xd1
+    OUT 0x64,AL
+    CALL waitkbdout
+    MOV AL,0xdf
+    OUT 0x60,AL
     CALL waitkbdout
 
     LGDT [GDTR0]
@@ -123,6 +130,7 @@ waitkbdout:
     IN AL,0x64
     AND AL,0x02
     JNZ waitkbdout
+    RET
 
 memcpy:
     MOV EAX,[ESI]

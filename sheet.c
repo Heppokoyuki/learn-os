@@ -155,10 +155,10 @@ void sheet_refreshsub(struct SHTCTL *ctl, int vx0, int vy0, int vx1, int vy1, in
         by0 = vy0 - sht->vy0;
         bx1 = vx1 - sht->vx0;
         by1 = vy1 - sht->vy0;
-        if(bx0 < 0) { bx0 = 0; }
-        if(by0 < 0) { by0 = 0; }
-        if(bx1 > sht->bxsize) { bx1 = sht->bxsize; }
-        if(by1 > sht->bysize) { by1 = sht->bysize; }
+//        if(bx0 < 0) { bx0 = 0; }
+//        if(by0 < 0) { by0 = 0; }
+//        if(bx1 > sht->bxsize) { bx1 = sht->bxsize; }
+//        if(by1 > sht->bysize) { by1 = sht->bysize; }
         for(by = by0; by < by1; by++) {
             vy = sht->vy0 + by;
             for(bx = bx0; bx < bx1; bx++) {
